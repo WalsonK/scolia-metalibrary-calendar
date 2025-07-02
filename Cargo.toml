@@ -5,6 +5,7 @@ edition = "2024"
 
 [lib]
 name = "rustlib"
+path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]

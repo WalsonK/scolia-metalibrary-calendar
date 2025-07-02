@@ -1,0 +1,7 @@
+services:
+  rustlib_builder:
+    build: .
+    image: rustlib:latest
+    container_name: rustlib_builder
+    volumes:
+      - ./shared:/shared
