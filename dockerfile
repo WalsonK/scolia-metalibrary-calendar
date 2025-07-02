@@ -1,21 +1,16 @@
-# Étape 1 : Build Rust
+# Étape 1: Compilation
 FROM rust:latest as builder
 
 WORKDIR /src
 
-# Copie uniquement les fichiers nécessaires pour le cache des dépendances
+# Copie les fichiers de dépendances et les télécharge pour le cache
 COPY Cargo.toml Cargo.lock ./
 RUN cargo fetch
 
-# Copie le reste des fichiers et compile
+# Copie tout le code source et compile en mode release
 COPY . .
-RUN cargo build --release && test -f target/release/librustlib.so
+RUN cargo build --release
 
-# Étape 2 : Copie minimale dans une image légère
-FROM busybox
-
-# Dossier partagé via bind mount
-VOLUME ["/shared"]
-
-# Copie la bibliothèque compilée vers le dossier partagé
-COPY --from=builder /src/target/release/librustlib.so /shared/librustlib.so
+# Étape 2: La commande qui sera exécutée
+# Cette commande copie la librairie compilée dans un dossier qui sera notre volume partagé.
+CMD ["cp", "target/release/librustlib.so", "/shared_libs/"]
